@@ -21,6 +21,8 @@ venv/
 .venv/
 env/
 
+worker/repos/
+
 # Environment Variables
 
 .env
