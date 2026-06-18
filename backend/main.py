@@ -22,7 +22,10 @@ def generate(job: JobRequest):
         "status": "queued"
     }
 
-    enqueue_job(job_id)
+    enqueue_job({
+        "job_id": job_id,
+        "repo_url": job.repo_url
+    })
 
     return{
         "job_id": job_id,
