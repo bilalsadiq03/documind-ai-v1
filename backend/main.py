@@ -65,3 +65,34 @@ def get_job(job_id: str):
         "status": job.status,
         "readme_path": job.readme_path
     }
+
+
+@app.get("/jobs/{job_id}/readme")
+def get_readme(job_id: str):
+
+    db = SessionLocal()
+
+    job = (
+        db.query(Job)
+        .filter(Job.id == job_id)
+        .first()
+    )
+
+    db.close()
+
+    if not job:
+        return {
+            "error": "Job not found"
+        }
+
+    if job.status != "completed":
+        return {
+            "error": "README not ready"
+        }
+
+    with open(job.readme_path, "r", encoding="utf-8") as f:
+        content = f.read()
+
+    return {
+        "content": content
+    }

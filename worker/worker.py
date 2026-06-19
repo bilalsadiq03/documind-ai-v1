@@ -17,7 +17,7 @@ redis_client = redis.Redis(
 
 QUEUE_NAME = "documind:jobs"
 WORKDIR = "./repos"
-OUTPUT_DIR = "./generated"
+OUTPUT_DIR = "../storage/generated"
 
 os.makedirs(WORKDIR, exist_ok=True)
 os.makedirs(OUTPUT_DIR, exist_ok=True)
