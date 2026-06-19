@@ -47,6 +47,8 @@ backend/.env
 
 worker/venv/
 worker/.env
+worker/generated
+worker/repos
 
 # =========================
 
