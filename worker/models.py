@@ -1,9 +1,9 @@
 from sqlalchemy import Column
 from sqlalchemy import String
 from sqlalchemy import Text
+from sqlalchemy.orm import declarative_base
 
-from database import Base
-
+Base = declarative_base()
 
 class Job(Base):
 
@@ -21,8 +21,7 @@ class Job(Base):
 
     status = Column(
         String,
-        nullable=False,
-        default="queued"
+        nullable=False
     )
 
     readme_path = Column(

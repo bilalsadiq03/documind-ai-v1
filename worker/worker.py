@@ -6,6 +6,8 @@ from git import Repo
 
 from repo_analyzer import collect_files, build_prompt
 from gemini_client import generate_readme
+from database import SessionLocal
+from models import Job
 
 redis_client = redis.Redis(
     host="localhost",
@@ -30,6 +32,18 @@ while True:
 
         job_id = job["job_id"]
         repo_url = job["repo_url"]
+
+        db = SessionLocal()
+
+        job_record = (
+            db.query(Job)
+            .filter(Job.id == job_id)
+            .first()
+        )
+
+        if job_record:
+            job_record.status = "processing"
+            db.commit()
 
         print("\n" + "=" * 50)
         print(f"Processing Job: {job_id}")
@@ -113,6 +127,11 @@ while True:
 
             print(f"README saved: {output_file}")
 
+            if job_record:
+                job_record.status = "completed"
+                job_record.readme_path = output_file
+                db.commit()
+
         except Exception as e:
             print("Failed to save README")
             print(e)
@@ -121,5 +140,9 @@ while True:
         print(f"Job {job_id} completed successfully")
 
     except Exception as e:
-        print("Unexpected Worker Error")
+
+        if job_record:
+            job_record.status = "failed"
+            db.commit()
+
         print(e)

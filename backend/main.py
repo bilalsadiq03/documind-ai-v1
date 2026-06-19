@@ -1,7 +1,8 @@
 from fastapi import FastAPI
 from schemas import JobRequest
-from jobs import jobs
 from queue_service import enqueue_job
+from models import Job
+from database import SessionLocal
 import uuid
 
 app = FastAPI()
@@ -14,30 +15,53 @@ def root():
 
 @app.post("/generate")
 def generate(job: JobRequest):
+
     job_id = str(uuid.uuid4())
 
-    jobs[job_id] = {
-        "id": job_id,
-        "repo_url": job.repo_url,
-        "status": "queued"
-    }
+    db = SessionLocal()
+
+    db_job = Job(
+        id=job_id,
+        repo_url=job.repo_url,
+        status="queued"
+    )
+
+    db.add(db_job)
+    db.commit()
+
+    db.close()
 
     enqueue_job({
         "job_id": job_id,
         "repo_url": job.repo_url
     })
 
-    return{
+    return {
         "job_id": job_id,
         "status": "queued"
     }
 
+
 @app.get("/jobs/{job_id}")
 def get_job(job_id: str):
 
-    if job_id not in jobs:
+    db = SessionLocal()
+
+    job = (
+        db.query(Job)
+        .filter(Job.id == job_id)
+        .first()
+    )
+
+    db.close()
+
+    if not job:
         return {
             "error": "Job not found"
         }
-    
-    return jobs[job_id]
+
+    return {
+        "id": job.id,
+        "status": job.status,
+        "readme_path": job.readme_path
+    }
