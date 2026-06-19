@@ -3,6 +3,7 @@ from schemas import JobRequest
 from queue_service import enqueue_job
 from models import Job
 from database import SessionLocal
+from fastapi.responses import FileResponse
 import uuid
 
 app = FastAPI()
@@ -96,3 +97,25 @@ def get_readme(job_id: str):
     return {
         "content": content
     }
+
+@app.get("/jobs/{job_id}/download")
+def download_readme(job_id: str):
+
+    db = SessionLocal()
+
+    job = (
+        db.query(Job)
+        .filter(Job.id == job_id)
+        .first()
+    )
+
+    db.close()
+
+    if not job:
+        return {"error": "Job not found"}
+
+    return FileResponse(
+        path=job.readme_path,
+        filename="README.md",
+        media_type="text/markdown"
+    )
