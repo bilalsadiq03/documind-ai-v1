@@ -4,9 +4,18 @@ from queue_service import enqueue_job
 from models import Job
 from database import SessionLocal
 from fastapi.responses import FileResponse
+from fastapi.middleware.cors import CORSMiddleware
 import uuid
 
 app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 @app.get("/")
 def root():
