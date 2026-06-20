@@ -1,5 +1,7 @@
 function StatusCard({ status }) {
 
+    const isCompleted = status === "completed";
+
   const getMessage = () => {
 
     switch (status) {
@@ -39,6 +41,8 @@ function StatusCard({ status }) {
             <p className="text-gray-500 capitalize">
               Status: {status}
             </p>
+
+            <div className={`w-4 h-4 rounded-full ${isCompleted ? "bg-green-500" : "bg-black animate-pulse"}`} />
 
           </div>
 

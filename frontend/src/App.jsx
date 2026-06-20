@@ -94,6 +94,7 @@ function App() {
         {readme && (
           <ReadmeViewer
             content={readme}
+            jobId={jobId}
           />
         )}
 
