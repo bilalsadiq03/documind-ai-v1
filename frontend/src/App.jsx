@@ -10,13 +10,16 @@ import ReadmeViewer from "./components/ReadmeViewer";
 import api from "./services/api";
 
 function App() {
+
   const [jobId, setJobId] = useState("");
   const [status, setStatus] = useState("");
   const [loading, setLoading] = useState(false);
   const [readme, setReadme] = useState("");
 
   const handleGenerate = async (repoUrl) => {
+
     try {
+
       setLoading(true);
 
       const response = await api.post("/generate", {
@@ -28,32 +31,42 @@ function App() {
       setReadme("");
 
     } catch (error) {
+
       console.error(error);
-      alert("Failed to create job");
+      alert("Failed to generate README");
+
     } finally {
+
       setLoading(false);
+
     }
   };
 
   useEffect(() => {
+
     if (!jobId) return;
 
     const interval = setInterval(async () => {
+
       try {
+
         const response = await api.get(
           `/jobs/${jobId}`
         );
 
-        const currentStatus = response.data.status;
+        const currentStatus =
+          response.data.status;
 
         setStatus(currentStatus);
 
         if (currentStatus === "completed") {
+
           clearInterval(interval);
 
-          const readmeResponse = await api.get(
-            `/jobs/${jobId}/readme`
-          );
+          const readmeResponse =
+            await api.get(
+              `/jobs/${jobId}/readme`
+            );
 
           setReadme(
             readmeResponse.data.content
@@ -67,6 +80,7 @@ function App() {
       } catch (error) {
         console.error(error);
       }
+
     }, 2000);
 
     return () => clearInterval(interval);
@@ -78,7 +92,7 @@ function App() {
 
       <Navbar />
 
-      <main className="max-w-4xl mx-auto px-6">
+      <main className="max-w-6xl mx-auto px-6">
 
         <Hero />
 
@@ -87,15 +101,19 @@ function App() {
           loading={loading}
         />
 
+        {!status && (
+          <div className="text-center py-16 text-gray-500">
+            Paste a GitHub repository URL to generate
+            professional documentation.
+          </div>
+        )}
+
         {status && (
           <StatusCard status={status} />
         )}
 
         {readme && (
-          <ReadmeViewer
-            content={readme}
-            jobId={jobId}
-          />
+          <ReadmeViewer content={readme} />
         )}
 
       </main>

@@ -1,8 +1,12 @@
 function Hero() {
   return (
-    <section className="text-center py-24">
+    <section className="py-24 text-center">
 
-      <h1 className="text-6xl font-bold leading-tight">
+      <div className="inline-flex items-center border rounded-full px-4 py-2 text-sm mb-6">
+        AI-Powered Documentation
+      </div>
+
+      <h1 className="text-6xl font-bold tracking-tight">
         Generate README Files
         <br />
         Using AI

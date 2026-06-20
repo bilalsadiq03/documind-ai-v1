@@ -1,16 +1,14 @@
 function StatusCard({ status }) {
 
-    const isCompleted = status === "completed";
-
   const getMessage = () => {
 
     switch (status) {
 
       case "queued":
-        return "Preparing your repository...";
+        return "Preparing repository";
 
       case "processing":
-        return "Generating documentation...";
+        return "Generating documentation";
 
       case "completed":
         return "README generated successfully";
@@ -19,18 +17,31 @@ function StatusCard({ status }) {
         return "Generation failed";
 
       default:
-        return "Starting...";
+        return "Starting";
     }
   };
 
-  return (
-    <div className="max-w-2xl mx-auto mt-12">
+  const isCompleted = status === "completed";
 
-      <div className="border rounded-2xl p-8 bg-white shadow-sm">
+  return (
+    <div className="max-w-2xl mx-auto mt-10">
+
+      <div className="border rounded-2xl p-6 bg-white shadow-sm">
 
         <div className="flex items-center gap-4">
 
-          <div className="w-4 h-4 rounded-full bg-black animate-pulse" />
+          <div
+            className={`
+              w-4
+              h-4
+              rounded-full
+              ${
+                isCompleted
+                  ? "bg-green-500"
+                  : "bg-black animate-pulse"
+              }
+            `}
+          />
 
           <div>
 
@@ -39,10 +50,8 @@ function StatusCard({ status }) {
             </h3>
 
             <p className="text-gray-500 capitalize">
-              Status: {status}
+              {status}
             </p>
-
-            <div className={`w-4 h-4 rounded-full ${isCompleted ? "bg-green-500" : "bg-black animate-pulse"}`} />
 
           </div>
 
