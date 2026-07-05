@@ -5,10 +5,11 @@ from models import Job
 from database import SessionLocal
 from fastapi.responses import FileResponse
 from fastapi.middleware.cors import CORSMiddleware
+from auth.router import router as auth_router
 import uuid
 
 app = FastAPI()
-
+app.include_router(auth_router)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],

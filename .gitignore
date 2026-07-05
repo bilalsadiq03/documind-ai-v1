@@ -118,3 +118,6 @@ redis-data/
 
 *.log
 *.sqlite3
+
+
+backend/alembic/versions/
