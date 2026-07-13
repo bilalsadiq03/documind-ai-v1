@@ -9,9 +9,11 @@ from database import SessionLocal
 from auth.schemas import (
     RegisterRequest,
     UserResponse,
+    LoginRequest,
+    TokenResponse,
 )
 
-from auth.service import create_user
+from auth.service import create_user, login_user
 
 router = APIRouter(
     prefix="/auth",
@@ -35,6 +37,23 @@ def register(request: RegisterRequest, db: Session = Depends(get_db)):
         return create_user(
             db=db,
             name=request.name,
+            email=request.email,
+            password=request.password
+        )
+    except Exception as e:
+        raise HTTPException(
+            status_code=400,
+            detail=str(e)
+        )
+
+@router.post(
+    "/login",
+    response_model=TokenResponse,
+)
+def login(request: LoginRequest, db: Session = Depends(get_db)):
+    try:
+        return login_user(
+            db=db,
             email=request.email,
             password=request.password
         )
